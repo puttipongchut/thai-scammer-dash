@@ -1,11 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Thai Scammer Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
-  <h1>test</h1>
+  <div class="shell">
+    <header class="topbar">
+      <span class="masthead-mark">Thai Scammers Dash</span>
+      <span class="masthead-tag">Thailand · Public Incident Dashboard</span>
+      <div class="spacer"></div>
+      <div class="status">Feed status: active</div>
+      <div id="last-updated" class="muted"></div>
+    </header>
+
+    <aside class="panel-left">
+      <div id="kpi-rows"></div>
+      <div class="section-title">By Category</div>
+      <div id="cat-list" class="cat-list"></div>
+    </aside>
+
+    <main class="map-area">
+      <div id="map"></div>
+    </main>
+
+    <aside class="panel-right">
+      <div class="section-title">Recent Activity</div>
+      <div id="incident-feed" class="feed"></div>
+    </aside>
+
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+  </div>
 </body>
+
 </html>
