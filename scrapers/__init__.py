@@ -32,7 +32,7 @@ class BaseScraper(abc.ABC):
 
     def __init__(self):
         self.session = httpx.Client(
-            headers={"User-Agent": "ScamRadarBot/1.0 (civic research; contact@yourdomain.com)"},
+            headers={"User-Agent": "ScamBot/1.0 (civic research; contact@yourdomain.com)"},
             timeout=30,
             follow_redirects=True,
         )
@@ -51,10 +51,10 @@ class BaseScraper(abc.ABC):
             return []
     
 def run_all_scrapers() -> list[ScrapedIncident]:
-    # from scrapers.police import RTPNewsScraper
+    from scrapers.dsi import DSIScraper
 
     scrapers = [
-        # RTPNewsScraper(),
+        DSIScraper(),
     ]
 
     results = []
