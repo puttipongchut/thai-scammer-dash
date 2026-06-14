@@ -1,0 +1,256 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --paper: #F4F2ED;
+    --panel: #EAE7E0;
+    --ink: #20242B;
+    --ink-soft: #6B7280;
+    --ink-faint: #A6A096;
+    --rule: #D9D5CC;
+    --navy: #1F3A52;
+    --red: #A6362C;
+    --orange: #C1672E;
+    --ochre: #B6862C;
+    --sage: #4B7755;
+    --font-body: 'Noto Sans Mono', monospace;
+}
+
+html,
+body {
+    height: 100%;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 13px;
+    overflow: hidden;
+}
+
+.shell {
+    display: grid;
+    grid-template-rows: 58px 1fr;
+    grid-template-columns: 250px 1fr 290px;
+    height: 100vh;
+}
+
+/* Masthead */
+.topbar {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding: 0 20px;
+    border-bottom: 1.5px solid var(--ink);
+}
+
+.masthead-mark {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+}
+
+.masthead-tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+.spacer {
+    flex: 1;
+}
+
+.status {
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--sage);
+    text-transform: uppercase;
+}
+
+.muted {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--ink-faint);
+}
+
+/* Panels */
+.panel-left,
+.panel-right {
+    background: var(--panel);
+    overflow-y: auto;
+}
+
+.panel-left {
+    border-right: 1px solid var(--rule);
+}
+
+.panel-right {
+    border-left: 1px solid var(--rule);
+}
+
+/* Ledger / KPI rows */
+.kpi-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 11px 18px;
+    border-bottom: 1px solid var(--rule);
+}
+
+.kpi-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+}
+
+.kpi-value {
+    font-family: var(--font-body);
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.kpi-value.accent {
+    color: var(--red);
+}
+
+.kpi-value.warn {
+    color: var(--ochre);
+}
+
+/* Section labels */
+.section-title {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    padding: 16px 18px 8px;
+    border-bottom: 1px solid var(--rule);
+}
+
+/* Category list */
+.cat-list {
+    padding: 6px 0 12px;
+}
+
+.cat-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 18px;
+    font-size: 12px;
+}
+
+.cat-tab {
+    width: 4px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+.cat-name {
+    flex: 1;
+    color: var(--ink);
+}
+
+.cat-count {
+    font-family: var(--font-body);
+    font-size: 11px;
+    color: var(--ink-soft);
+}
+
+/* Map */
+.map-area {
+    background: var(--paper);
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+}
+
+.leaflet-container {
+    background: var(--paper);
+    font-family: var(--font-body);
+}
+
+/* Feed / docket */
+.feed {
+    padding: 0;
+}
+
+.feed-item {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--rule);
+    border-left: 4px solid transparent;
+    cursor: pointer;
+}
+
+.feed-item:hover {
+    background: var(--paper);
+}
+
+.feed-item.sev-critical {
+    border-left-color: var(--red);
+}
+
+.feed-item.sev-high {
+    border-left-color: var(--orange);
+}
+
+.feed-item.sev-medium {
+    border-left-color: var(--ochre);
+}
+
+.feed-item.sev-low {
+    border-left-color: var(--sage);
+}
+
+.feed-ref {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--ink-faint);
+    margin-bottom: 3px;
+}
+
+.feed-title {
+    font-size: 12.5px;
+    line-height: 1.45;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.feed-meta {
+    font-family: var(--font-body);
+    font-size: 10px;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 10px;
+}
+
+/* Map popup */
+.popup-title {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--ink);
+}
+
+.popup-summary {
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--rule);
+}
