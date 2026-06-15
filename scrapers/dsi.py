@@ -1,12 +1,16 @@
 import re
+import time
+import logging
 from datetime import datetime
 from bs4 import BeautifulSoup
 
 from scrapers import BaseScraper, ScrapedIncident
 from scrapers.utils import extract_province, geocode_province, classify_severity, classify_category, extract_amount_thb
 
+logger = logging.getLogger(__name__)
+
 BASE_URL = "https://www.dsi.go.th"
-LIST_URL = f"{BASE_URL}/en/Type/Mission-News/2"
+LIST_URL = f"{BASE_URL}/en/Type/Mission-News/1"
 
 DATE_PATTERN = re.compile(r"\d{1,2}/\d{1,2}/\d{4}\s+\d{1,2}:\d{2}:\d{2}\s*[AP]M")
 
@@ -26,6 +30,7 @@ TAG_MAP = {
     "romance":      "romance",
     "โรแมนซ์":       "romance",
 }
+
 
 class DSIScraper(BaseScraper):
     name = "dsi"
@@ -48,20 +53,24 @@ class DSIScraper(BaseScraper):
 
             category = classify_category(title, TAG_MAP)
             if category == "other":
-                continue  # skip non-scam news
+                continue
 
             url = href if href.startswith("http") else BASE_URL + href
-
             published_at = _find_nearby_date(link)
 
-            province = extract_province(title)
-            severity = classify_severity(title, default="high")
-            amount   = extract_amount_thb(title)
-            lat, lng = geocode_province(province)
+            # Fetch the article body
+            time.sleep(1)
+            body_text, summary = self._fetch_article_detail(url)
+
+            combined  = title + " " + body_text
+            province  = extract_province(combined)
+            severity  = classify_severity(combined, default="high")
+            amount    = extract_amount_thb(combined)
+            lat, lng  = geocode_province(province)
 
             incidents.append(ScrapedIncident(
                 title=title,
-                summary="DSI case update — see source for full details.",
+                summary=summary or "DSI case update — see source for full details.",
                 source="DSI Thailand",
                 source_url=url,
                 published_at=published_at,
@@ -75,8 +84,39 @@ class DSIScraper(BaseScraper):
 
         return incidents
 
+    def _fetch_article_detail(self, url: str) -> tuple[str, str]:
+        """Returns (full_body_text, short_summary). Falls back to ("", "") on any failure."""
+        try:
+            resp = self.session.get(url, timeout=20)
+            resp.raise_for_status()
+            soup = BeautifulSoup(resp.text, "lxml")
+
+            h1 = soup.find("h1")
+            if not h1:
+                return "", ""
+
+            paragraphs = []
+            for el in h1.find_all_next():
+                if el.name in ("h2", "h3"):
+                    break 
+                if el.name == "p":
+                    text = el.get_text(strip=True)
+                    if text:
+                        paragraphs.append(text)
+
+            full_text = " ".join(paragraphs)
+
+            summary = max(paragraphs, key=len, default="")
+            if len(summary) > 280:
+                summary = summary[:277].rsplit(" ", 1)[0] + "…"
+
+            return full_text, summary
+        except Exception as e:
+            logger.warning("[dsi] failed to fetch detail %s: %s", url, e)
+            return "", ""
+
+
 def _find_nearby_date(tag) -> datetime:
-    """Walk up a few ancestor levels looking for a M/D/YYYY H:MM:SS AM/PM string."""
     node = tag
     for _ in range(4):
         node = node.parent
@@ -98,3 +138,4 @@ if __name__ == "__main__":
     print(f"Found {len(results)} scam-related incidents\n")
     for r in results[:5]:
         print(json.dumps(r.__dict__, default=str, indent=2, ensure_ascii=False))
+        
